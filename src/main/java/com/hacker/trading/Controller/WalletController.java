@@ -15,6 +15,7 @@ import com.hacker.trading.entities.Order;
 import com.hacker.trading.entities.User;
 import com.hacker.trading.entities.Wallet;
 import com.hacker.trading.entities.WalletTransaction;
+import com.hacker.trading.service.OrderService;
 import com.hacker.trading.service.UserService;
 import com.hacker.trading.service.WalletService;
 
@@ -27,6 +28,9 @@ public class WalletController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/api/wallet")
     public ResponseEntity<Wallet> getUserNameWallet(@RequestHeader("Authorization") String jwt) throws Exception{

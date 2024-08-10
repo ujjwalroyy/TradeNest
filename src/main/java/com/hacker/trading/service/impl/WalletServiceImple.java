@@ -25,6 +25,7 @@ public class WalletServiceImple implements WalletService {
         if(wallet == null){
             wallet = new Wallet();
             wallet.setUser(user);
+            walletRepository.save(wallet);
         }
         return wallet;
     }

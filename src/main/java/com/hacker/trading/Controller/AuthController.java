@@ -20,6 +20,7 @@ import com.hacker.trading.repository.UserRepository;
 import com.hacker.trading.response.AuthResponse;
 import com.hacker.trading.service.EmailService;
 import com.hacker.trading.service.TwoFactorOtpService;
+import com.hacker.trading.service.WatchlistService;
 import com.hacker.trading.service.impl.CustomeUserDetailsService;
 import com.hacker.trading.utils.OtpUtils;
 
@@ -44,6 +45,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private WatchlistService watchlistService;
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> register(@RequestBody User user) throws Exception{
         
@@ -60,6 +64,9 @@ public class AuthController {
         newUser.setPassword(user.getPassword());
         
         User savedUser = userRepository.save(newUser);
+
+        watchlistService.createWatchlist(savedUser);
+
         Authentication auth = new UsernamePasswordAuthenticationToken(
             user.getEmail(),
             user.getPassword()

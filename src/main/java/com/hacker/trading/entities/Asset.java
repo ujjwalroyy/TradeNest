@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -20,7 +19,7 @@ public class Asset {
 
     private double buyPrice;
 
-    @ManyToMany
+    @ManyToOne
     private Coin coin;
 
     @ManyToOne

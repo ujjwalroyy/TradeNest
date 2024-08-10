@@ -3,6 +3,7 @@ package com.hacker.trading.service.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hacker.trading.config.JwtProvider;
 import com.hacker.trading.domain.VerificationType;
@@ -11,6 +12,7 @@ import com.hacker.trading.entities.User;
 import com.hacker.trading.repository.UserRepository;
 import com.hacker.trading.service.UserService;
 
+@Service
 public class UserServiceImpl implements UserService{
 
     @Autowired

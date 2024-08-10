@@ -42,6 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentOrder.setUser(user);
         paymentOrder.setAmount(amount);
         paymentOrder.setPaymentMethod(paymentMethod);
+        paymentOrder.setStatus(PaymentOrderStatus.PENDING);
         return paymentOrderRepository.save(paymentOrder);
     }
 
@@ -52,6 +53,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Boolean proccedPaymentOrder(PaymentOrder paymentOrder, String paymentId) throws RazorpayException {
+        if(paymentOrder.getStatus() == null){
+            paymentOrder.setStatus(PaymentOrderStatus.PENDING);
+        }
         if(paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)){
             if(paymentOrder.getPaymentMethod().equals(PaymentMethod.RAZORPAY)){
                 RazorpayClient razorpayClient = new RazorpayClient(apiKey, apiSecretKey);
@@ -74,7 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentResponse createRazorpayPaymentLink(User user, Long amount) throws RazorpayException {
+    public PaymentResponse createRazorpayPaymentLink(User user, Long amount, Long orderId) throws RazorpayException {
         Long Amount = amount*100;
         try {
             RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecretKey);
@@ -95,7 +99,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             paymentLinkRequest.put("reminder_enable", true);
 
-            paymentLinkRequest.put("callback_url", "http://localhost:5173/wallet");
+            paymentLinkRequest.put("callback_url", "http://localhost:5173/wallet?order_id="+orderId);
             paymentLinkRequest.put("callback_method", "get");
 
             PaymentLink payment = razorpay.paymentLink.create(paymentLinkRequest);
@@ -108,8 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             return res;
 
-        } catch (Exception e) {
-            // TODO: handle exception
+        } catch (RazorpayException e) {
             System.out.println("Error creating payment link: "+e.getMessage());
             throw new RazorpayException(e.getMessage());
         }
@@ -131,7 +134,7 @@ public class PaymentServiceImpl implements PaymentService {
         .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder().setName("Top up wallet").build())
         .build()).build()).build();
         Session session = Session.create(params);
-        System.out.println("Session_____"+session);
+        System.out.println("Session _____ "+session);
         PaymentResponse res = new PaymentResponse();
         res.setPayment_url(session.getUrl());
         return res;

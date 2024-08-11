@@ -1,6 +1,6 @@
 import React from 'react'
 
-const StockChart = () => {
+const Profile = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const StockChart = () => {
   )
 }
 
-export default StockChart
+export default Profile
